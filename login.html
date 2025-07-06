@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login | Weather Forecast</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #111d2c, #2e8b57);
+      color: white;
+      overflow: hidden;
+    }
+    #login-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      perspective: 1200px;
+      position: relative;
+    }
+    .cube-container {
+      width: 200px;
+      height: 200px;
+      transform-style: preserve-3d;
+      animation: rotateCube 10s infinite linear;
+      position: absolute;
+      top: 10%;
+    }
+    .cube-face {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+    }
+    .face-front  { transform: rotateY(  0deg) translateZ(100px); }
+    .face-back   { transform: rotateY(180deg) translateZ(100px); }
+    .face-right  { transform: rotateY( 90deg) translateZ(100px); }
+    .face-left   { transform: rotateY(-90deg) translateZ(100px); }
+    .face-top    { transform: rotateX( 90deg) translateZ(100px); }
+    .face-bottom { transform: rotateX(-90deg) translateZ(100px); }
+    @keyframes rotateCube {
+      0%   { transform: rotateX(0deg) rotateY(0deg); }
+      100% { transform: rotateX(360deg) rotateY(360deg); }
+    }
+
+    .typing-text {
+      text-align: center;
+      font-size: 1.2rem;
+      min-height: 60px;
+      font-weight: 500;
+      margin-bottom: 20px;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 3px solid rgba(255, 255, 255, 0.75);
+      width: 100%;
+      animation: blinkCursor 0.8s step-end infinite;
+    }
+
+    @keyframes blinkCursor {
+      0%, 100% { border-color: rgba(255,255,255,0.75); }
+      50% { border-color: transparent; }
+    }
+
+    #forms-container {
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 2rem;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 25px rgba(0, 255, 255, 0.2);
+      width: 90%;
+      max-width: 400px;
+    }
+
+    form {
+      display: none;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    form.active {
+      display: flex;
+    }
+
+    input {
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    button {
+      background: #00b894;
+      color: white;
+      border: none;
+      padding: 0.8rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #019875;
+    }
+
+    .toggle-link {
+      color: #00ffe7;
+      cursor: pointer;
+      text-decoration: underline;
+      text-align: center;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" role="main" aria-label="Login Page">
+    <section id="login-page">
+      <div class="cube-container" aria-hidden="true">
+        <div class="cube-face face-front"></div>
+        <div class="cube-face face-back"></div>
+        <div class="cube-face face-right"></div>
+        <div class="cube-face face-left"></div>
+        <div class="cube-face face-top"></div>
+        <div class="cube-face face-bottom"></div>
+      </div>
+
+      <!-- 🎯 Animated Welcome Text -->
+      <h2 class="typing-text" id="welcome-text"></h2>
+
+      <div id="forms-container">
+        <form id="login-form" autocomplete="off" class="active">
+          <h3>Welcome Back</h3>
+          <label for="login-username">Username</label>
+          <input type="text" id="login-username" name="username" required />
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" name="password" required />
+          <button type="submit">Log In</button>
+          <div class="toggle-link" id="to-register">Don't have an account? Register</div>
+        </form>
+        <form id="register-form" autocomplete="off">
+          <h3>Create Account</h3>
+          <label for="reg-username">Username</label>
+          <input type="text" id="reg-username" name="username" required />
+          <label for="reg-email">Email</label>
+          <input type="email" id="reg-email" name="email" required />
+          <label for="reg-password">Password</label>
+          <input type="password" id="reg-password" name="password" required />
+          <label for="reg-confirm-password">Confirm Password</label>
+          <input type="password" id="reg-confirm-password" name="confirm-password" required />
+          <button type="submit">Register</button>
+          <div class="toggle-link" id="to-login">Already have an account? Login</div>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // ✨ Typing Animation
+    const welcomeMessage = "Welcome to Our Weather Plus. Please login/signup to continue.";
+    const welcomeTextElement = document.getElementById("welcome-text");
+
+    let charIndex = 0;
+    function typeMessage() {
+      if (charIndex < welcomeMessage.length) {
+        welcomeTextElement.textContent += welcomeMessage.charAt(charIndex);
+        charIndex++;
+        setTimeout(typeMessage, 40);
+      }
+    }
+    typeMessage();
+
+    // 🔄 Login/Signup Toggle & Redirect Logic
+    document.addEventListener("DOMContentLoaded", () => {
+      const loginForm = document.getElementById("login-form");
+      const registerForm = document.getElementById("register-form");
+      const toRegister = document.getElementById("to-register");
+      const toLogin = document.getElementById("to-login");
+
+      toRegister.addEventListener("click", () => {
+        loginForm.classList.remove("active");
+        registerForm.classList.add("active");
+      });
+
+      toLogin.addEventListener("click", () => {
+        registerForm.classList.remove("active");
+        loginForm.classList.add("active");
+      });
+      loginForm.addEventListener("submit", (e) => {
+       e.preventDefault();
+       sessionStorage.setItem("isLoggedIn", "true");  // ✅ Add login flag
+      window.location.href = "dashboard.html";       // ✅ Correct file
+      });
+      registerForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      sessionStorage.setItem("isLoggedIn", "true");  // ✅ Add login flag
+      window.location.href = "dashboard.html";       // ✅ Correct file
+      });
+    });
+  </script>
+</body>
+</html>
