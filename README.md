@@ -7,7 +7,7 @@
 ## 📸 UI Preview
 
 ### 🔍 Search View  
-![Search View](assets/screenshots/search-view.png)  
+![Search View](![image](assets/screenshots/current-weather.png)  
 A clean input box where users can type in any city name. Past searches are shown as clickable buttons.
 
 ### 🌤️ Current Weather Card  
